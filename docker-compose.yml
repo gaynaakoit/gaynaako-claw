@@ -1,35 +1,49 @@
-version: '3.8'
+version: "3.9"
 
 services:
-
   postgres:
     image: postgres:15
+    restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: gaynako
-    ports:
-      - "5433:5432"  # mappe 5432 du conteneur sur le port 5433 de ton Mac
+      POSTGRES_PASSWORD: SUPER_STRONG_PASSWORD
+      POSTGRES_DB: gaynaako
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   redis:
     image: redis:7
-    ports:
-      - "6379:6379"
+    restart: always
 
   backend:
     build: ./backend/gaynaako-claw-backend
-    ports:
-      - "3000:3000"
+    restart: always
     depends_on:
       - postgres
       - redis
     environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/gaynako
+      DATABASE_URL: postgres://postgres:SUPER_STRONG_PASSWORD@postgres:5432/gaynaako
       REDIS_HOST: redis
+    ports:
+      - "3000:3000"
 
   frontend:
-    build: ./frontend/gaynaako-claw-frontend
-    ports:
-      - "4200:4200"
+    build:
+      context: ./frontend/gaynaako-claw-frontend
+      target: prod
     depends_on:
       - backend
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  postgres_data:

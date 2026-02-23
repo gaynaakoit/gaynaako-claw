@@ -1,12 +1,22 @@
-FROM node:14
-
+# ---------- Stage dev ----------
+FROM node:14-alpine AS dev
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm install
-
 COPY . .
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--port", "4200"]
 
-EXPOSE 4200
+# ---------- Stage build prod ----------
+FROM node:18-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build -- --configuration production
 
-CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]
+# ---------- Stage nginx prod ----------
+FROM nginx:alpine AS prod
+COPY --from=build /app/dist/gaynaako-claw-frontend /usr/share/nginx/html
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
