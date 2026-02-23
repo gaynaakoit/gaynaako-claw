@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gaynako
+    ports:
+      - "5433:5432"  # mappe 5432 du conteneur sur le port 5433 de ton Mac
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend/gaynaako-claw-backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/gaynako
+      REDIS_HOST: redis
+
+  frontend:
+    build: ./frontend/gaynaako-claw-frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
