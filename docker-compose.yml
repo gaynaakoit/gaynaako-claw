@@ -16,7 +16,7 @@ services:
     restart: always
 
   backend:
-    build: ./backend/gaynaako-claw-backend
+    image: ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-backend:latest
     restart: always
     depends_on:
       - postgres
@@ -26,19 +26,18 @@ services:
       REDIS_HOST: redis
     networks:
       - app-network
-    expose:
+    ports:
       - "3000:3000"
 
   frontend:
-    build:
-      context: ./frontend/gaynaako-claw-frontend
-      target: prod
+    image: ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-frontend:latest
+    restart: always
     depends_on:
       - backend
     networks:
       - app-network
-    expose:
-      - "8080:80" 
+    ports:
+      - "8080:80"
 
 networks:
   app-network:

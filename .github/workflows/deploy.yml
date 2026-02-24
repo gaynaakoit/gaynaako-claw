@@ -6,37 +6,40 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 🔹 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 🔹 2. Set up Docker Buildx (utile si besoin de build local, mais on ne rebuild plus)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      # 🔹 3. Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 🔹 Build backend image
+      # 🔹 4. Build & push backend image
       - name: Build and push backend Docker image
         run: |
           docker build -t gaynaako-claw-backend:latest ./backend/gaynaako-claw-backend
           docker tag gaynaako-claw-backend:latest ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-backend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-backend:latest
 
-      # 🔹 Build frontend image (Angular)
+      # 🔹 5. Build & push frontend image
       - name: Build and push frontend Docker image
         run: |
           docker build -t gaynaako-claw-frontend:latest ./frontend/gaynaako-claw-frontend
           docker tag gaynaako-claw-frontend:latest ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-frontend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-frontend:latest
 
-      # 🔹 Deploy on Vultr
+      # 🔹 6. Deploy on Vultr via SSH
       - name: Deploy on Vultr
         uses: appleboy/ssh-action@master
         with:
@@ -50,19 +53,19 @@ jobs:
             git clean -fd
             git pull origin main
 
-            # Pull images déjà construites
+            # Pull les dernières images Docker
             docker pull ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-backend:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-frontend:latest
 
-            # Stop & rebuild containers
+            # Stop les containers existants et relance
             docker compose down
-            docker compose up -d --build
+            docker compose up -d
 
             # Vérification rapide
             docker compose ps
             docker compose logs --tail=50
 
-            # 🔹 Optionnel : Reload Nginx pour reverse proxy si config changée
+            # Reload NGINX si actif
             if systemctl is-active --quiet nginx; then
-              systemctl reload nginx
+              systemctl reload nginx || true
             fi
