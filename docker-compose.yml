@@ -16,7 +16,7 @@ services:
     restart: always
 
   backend:
-    image: ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-backend:latest
+    image: warriorkod/gaynaako-claw-backend:latest
     restart: always
     depends_on:
       - postgres
@@ -30,7 +30,7 @@ services:
       - "3000:3000"
 
   frontend:
-    image: ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-frontend:latest
+    image: warriorkod/gaynaako-claw-frontend:latest
     restart: always
     depends_on:
       - backend
