@@ -28,13 +28,13 @@ services:
       - "3000:3000"
 
   frontend:
-  build:
-    context: ./frontend/gaynaako-claw-frontend
-    target: prod
-  depends_on:
-    - backend
-  ports:
-    - "80:80"
+    build:
+      context: ./frontend/gaynaako-claw-frontend
+      target: prod
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
 
 volumes:
   postgres_data:
