@@ -49,11 +49,20 @@ jobs:
             git reset --hard
             git clean -fd
             git pull origin main
+
             # Pull images déjà construites
             docker pull ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-backend:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/gaynaako-claw-frontend:latest
-            # Recréation des containers
-            docker compose -f docker-compose.yml down
-            docker compose -f docker-compose.yml up -d
+
+            # Stop & rebuild containers
+            docker compose down
+            docker compose up -d --build
+
+            # Vérification rapide
             docker compose ps
             docker compose logs --tail=50
+
+            # 🔹 Optionnel : Reload Nginx pour reverse proxy si config changée
+            if systemctl is-active --quiet nginx; then
+              systemctl reload nginx
+            fi

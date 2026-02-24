@@ -24,8 +24,10 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:SUPER_STRONG_PASSWORD@postgres:5432/gaynaako
       REDIS_HOST: redis
-    ports:
-      - "3000:3000"
+    networks:
+      - app-network
+    expose:
+      - "3000"
 
   frontend:
     build:
@@ -33,8 +35,14 @@ services:
       target: prod
     depends_on:
       - backend
-    ports:
-      - "80:80"
+    networks:
+      - app-network
+    expose:
+      - "80"
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   postgres_data:
