@@ -1,5 +1,5 @@
 # Backend Dockerfile - Dev & Prod
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Installer toutes les dépendances (y compris dev pour dev)
-RUN npm install
+RUN npm ci
 
 # Copier le reste du code
 COPY . .

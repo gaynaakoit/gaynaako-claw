@@ -2,15 +2,15 @@
 FROM node:14-alpine AS dev
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--port", "4200"]
 
 # ---------- Stage build prod ----------
-FROM node:18-alpine AS build
+FROM node:14-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build -- --configuration production
 
