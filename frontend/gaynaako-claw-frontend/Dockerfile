@@ -17,6 +17,6 @@ RUN npm run build -- --configuration production
 # ---------- Stage nginx prod ----------
 FROM nginx:alpine AS prod
 COPY --from=build /app/dist/gaynaako-claw-frontend /usr/share/nginx/html
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
