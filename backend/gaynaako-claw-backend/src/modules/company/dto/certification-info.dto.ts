@@ -38,4 +38,14 @@ import {
     @IsArray()
     @IsString({ each: true })
     qualityStandards?: string[];
+  
+    @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    securityCompliance?: string[];
+  
+    @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    cloudPartnerships?: string[];
   }
