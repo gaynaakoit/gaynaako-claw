@@ -1,7 +1,11 @@
-import { Controller, Post, Get, Put, Delete, Body, Param, Query, Req } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, Query, Req, UseGuards } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { AuthGuard } from '../../auth/auth.guard';
+import { RolesGuard } from '../../auth/roles.guard';
+import { Roles } from '../../auth/roles.decorator';
+
 
 @Controller('companies')
 export class CompanyController {
@@ -22,6 +26,8 @@ export class CompanyController {
     return this.service.findOne(id);
   }
 
+  /*@UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin', 'manager')*/
   @Put(':id')
   update(
     @Param('id') id: string,
