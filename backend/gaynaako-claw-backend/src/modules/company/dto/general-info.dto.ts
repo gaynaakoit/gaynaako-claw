@@ -27,6 +27,14 @@ import {
     legalName?: string;
   
     @IsOptional()
+    @IsString()
+    registrationNumber?: string;
+  
+    @IsOptional()
+    @IsString()
+    taxId?: string;
+  
+    @IsOptional()
     @IsNumber()
     yearFounded?: number;
   
@@ -44,6 +52,30 @@ import {
   
     @IsOptional()
     @IsString()
+    email?: string;
+  
+    @IsOptional()
+    @IsString()
+    phone?: string;
+  
+    @IsOptional()
+    @IsString()
+    linkedin?: string;
+  
+    @IsOptional()
+    @IsString()
+    description?: string;
+  
+    @IsOptional()
+    @IsString()
+    mission?: string;
+  
+    @IsOptional()
+    @IsString()
+    vision?: string;
+  
+    @IsOptional()
+    @IsString()
     country?: string;
   
     @IsOptional()
@@ -51,11 +83,29 @@ import {
     city?: string;
   
     @IsOptional()
+    @IsString()
+    address?: string;
+  
+    @IsOptional()
     @ValidateNested()
     @Type(() => GeoCoordinatesDto)
     geoCoordinates?: GeoCoordinatesDto;
   
     @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    operatingCountries?: string[];
+  
+    @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    regionalPresence?: string[];
+  
+    @IsOptional()
     @IsBoolean()
     remoteCapability?: boolean;
+  
+    @IsOptional()
+    @IsString()
+    timeZone?: string;
   }
