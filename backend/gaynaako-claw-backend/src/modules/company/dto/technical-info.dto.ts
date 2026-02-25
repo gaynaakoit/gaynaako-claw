@@ -11,14 +11,39 @@ export class TechnicalInfoDto {
 
   @IsOptional()
   @IsNumber()
-  devOpsMaturityLevel?: number;
+  seniorEngineersCount?: number;
 
   @IsOptional()
   @IsNumber()
-  aiReadinessScore?: number;
+  projectManagersCount?: number;
+
+  @IsOptional()
+  @IsNumber()
+  certifiedEngineersCount?: number;
 
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   languages?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  developmentMethodologies?: string[]; // Agile, Scrum, etc.
+
+  @IsOptional()
+  @IsNumber()
+  devOpsMaturityLevel?: number; // 1-5
+
+  @IsOptional()
+  @IsNumber()
+  cybersecurityLevel?: number; // 1-5
+
+  @IsOptional()
+  @IsNumber()
+  cloudMaturityLevel?: number; // 1-5
+
+  @IsOptional()
+  @IsNumber()
+  aiReadinessScore?: number; // 0-100
 }
