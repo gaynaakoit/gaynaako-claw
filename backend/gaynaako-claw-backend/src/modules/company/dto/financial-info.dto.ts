@@ -1,4 +1,4 @@
-import { IsOptional, IsNumber, IsString } from 'class-validator';
+import { IsOptional, IsNumber, IsString, IsArray } from 'class-validator';
 
 export class FinancialInfoDto {
   @IsOptional()
@@ -23,5 +23,15 @@ export class FinancialInfoDto {
 
   @IsOptional()
   @IsString()
-  financialRating?: string;
+  financialRating?: string; 
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  fundingSources?: string[]; // self-funded, VC, grants
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  insuranceCoverage?: string[];
 }
