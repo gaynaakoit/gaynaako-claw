@@ -21,4 +21,17 @@ export class ExperienceInfoDto {
   @IsOptional()
   @IsBoolean()
   internationalExperience?: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  avgProjectSize?: number;
+
+  @IsOptional()
+  @IsNumber()
+  largestProjectValue?: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  keyExpertise?: string[];
 }
