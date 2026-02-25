@@ -13,4 +13,8 @@ export class EsgInfoDto {
   @IsOptional()
   @IsBoolean()
   carbonNeutral?: boolean;
+
+  @IsOptional()
+  @IsString()
+  philanthropyModel?: string; // Exemple : "Pourcentage des bénéfices réinvestis dans des œuvres sociales"
 }
