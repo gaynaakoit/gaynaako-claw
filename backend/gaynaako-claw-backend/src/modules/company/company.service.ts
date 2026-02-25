@@ -73,4 +73,41 @@ export class CompanyService {
       aiCompatibilityScore: aiCompatibility,
     };
   }
+
+  async filterCompanies(filter: {
+    country?: string;
+    primarySector?: string;
+    minRevenue?: number;
+    maxRevenue?: number;
+    minScore?: number;
+    maxScore?: number;
+  }) {
+    const qb = this.repo.createQueryBuilder('company');
+  
+    if (filter.country) {
+      qb.andWhere("company.generalInfo->>'country' = :country", { country: filter.country });
+    }
+  
+    if (filter.primarySector) {
+      qb.andWhere("company.sectorInfo->>'primarySector' = :primarySector", { primarySector: filter.primarySector });
+    }
+  
+    if (filter.minRevenue) {
+      qb.andWhere("CAST(company.financialInfo->>'annualRevenue' AS INT) >= :minRevenue", { minRevenue: filter.minRevenue });
+    }
+  
+    if (filter.maxRevenue) {
+      qb.andWhere("CAST(company.financialInfo->>'annualRevenue' AS INT) <= :maxRevenue", { maxRevenue: filter.maxRevenue });
+    }
+  
+    if (filter.minScore) {
+      qb.andWhere("company.profileCompletenessScore >= :minScore", { minScore: filter.minScore });
+    }
+  
+    if (filter.maxScore) {
+      qb.andWhere("company.profileCompletenessScore <= :maxScore", { maxScore: filter.maxScore });
+    }
+  
+    return qb.getMany();
+  }
 }

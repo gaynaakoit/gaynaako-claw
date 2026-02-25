@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, Query } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -41,4 +41,10 @@ export class CompanyController {
     await this.service.update(id, company);
     return scores;
   }
+
+  @Get('filter')
+  filter(@Query() filter: any) {
+    return this.service.filterCompanies(filter);
+  }
+  
 }
