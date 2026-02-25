@@ -12,6 +12,8 @@ async function bootstrap() {
       transform: true, // transforme automatiquement types (ex: string -> number)
     }),
   );
-  await app.listen(process.env.PORT ?? 3000);
+  // ⚡ Ajouter un préfixe global si tu veux /api devant toutes les routes
+  app.setGlobalPrefix('api');
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap();
