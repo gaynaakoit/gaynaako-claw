@@ -4,10 +4,16 @@ import { Repository } from 'typeorm';
 import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { CompanyActivityLog } from './entities/company-activity-log.entity';
 
 @Injectable()
 export class CompanyService {
-  constructor(@InjectRepository(Company) private repo: Repository<Company>) {}
+  constructor(
+        @InjectRepository(Company)
+        private repo: Repository<Company>,
+        @InjectRepository(CompanyActivityLog)
+        private readonly activityRepo: Repository<CompanyActivityLog>
+  ) {}
 
   async create(dto: CreateCompanyDto) {
     const company = this.repo.create(dto);
@@ -25,11 +31,28 @@ export class CompanyService {
     return company;
   }
 
-  async update(id: string, dto: UpdateCompanyDto) {
+  async update(id: string, dto: UpdateCompanyDto, currentUserId: string) {
     const company = await this.findOne(id);
+  
+    // Garder un snapshot de l'état avant modification
+    const beforeUpdate = { ...company };
+  
     Object.assign(company, dto);
     Object.assign(company, this.calculateScores(company));
-    return this.repo.save(company);
+  
+    const updatedCompany = await this.repo.save(company);
+  
+    // Enregistrer dans activity log
+    await this.activityRepo.save({
+      companyId: company.id,
+      changes: {
+        before: beforeUpdate,
+        after: dto,
+      },
+      updatedBy: currentUserId,
+    });
+  
+    return updatedCompany;
   }
 
   async remove(id: string) {
