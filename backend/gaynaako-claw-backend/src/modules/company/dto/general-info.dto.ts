@@ -1,12 +1,15 @@
-import {
+import { 
     IsString,
     IsOptional,
-    IsNumber,
-    IsEnum,
-    IsBoolean,
+    IsNumber, 
+    IsEnum, 
+    IsBoolean, 
     IsArray,
-    IsUrl,
+    IsUrl, 
     ValidateNested,
+    Matches, 
+    MaxLength, 
+    MinLength 
   } from 'class-validator';
   import { Type } from 'class-transformer';
   
@@ -17,21 +20,25 @@ import {
     @IsNumber()
     lng: number;
   }
-  
   export class GeneralInfoDto {
     @IsString()
+    @MinLength(2)
+    @MaxLength(100)
     name: string;
   
     @IsOptional()
     @IsString()
+    @MaxLength(100)
     legalName?: string;
   
     @IsOptional()
     @IsString()
+    @Matches(/^[A-Z0-9-]{5,20}$/) // Exemple pour registration number
     registrationNumber?: string;
   
     @IsOptional()
     @IsString()
+    @Matches(/^[A-Z0-9-]{5,20}$/) // Exemple pour taxId
     taxId?: string;
   
     @IsOptional()
@@ -52,6 +59,7 @@ import {
   
     @IsOptional()
     @IsString()
+    @MaxLength(100)
     email?: string;
   
     @IsOptional()
@@ -73,7 +81,7 @@ import {
     @IsOptional()
     @IsString()
     vision?: string;
-  
+
     @IsOptional()
     @IsString()
     country?: string;
@@ -104,7 +112,7 @@ import {
     @IsOptional()
     @IsBoolean()
     remoteCapability?: boolean;
-  
+
     @IsOptional()
     @IsString()
     timeZone?: string;
