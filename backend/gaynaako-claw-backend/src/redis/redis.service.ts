@@ -19,4 +19,9 @@ export class RedisService {
     const data = await this.client.get(key);
     return data ? JSON.parse(data) : null;
   }
+
+  // ✅ Nouvelle méthode pour récupérer toutes les clés correspondantes
+  async keys(pattern: string): Promise<string[]> {
+    return this.client.keys(pattern);
+  }
 }

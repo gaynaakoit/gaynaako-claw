@@ -5,6 +5,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { CompanyModule } from './modules/company/company.module';
+import { MemoryModule } from './modules/memory/memory.module';
+import { RedisModule } from './redis/redis.module';
 
 
 @Module({
@@ -20,6 +22,8 @@ import { CompanyModule } from './modules/company/company.module';
       synchronize: true,
     }),
     CompanyModule,
+    MemoryModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],

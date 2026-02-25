@@ -5,6 +5,7 @@ import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { CompanyActivityLog } from './entities/company-activity-log.entity';
+import { MemoryService } from '../memory/memory.service';
 
 @Injectable()
 export class CompanyService {
@@ -12,13 +13,19 @@ export class CompanyService {
         @InjectRepository(Company)
         private repo: Repository<Company>,
         @InjectRepository(CompanyActivityLog)
-        private readonly activityRepo: Repository<CompanyActivityLog>
+        private readonly activityRepo: Repository<CompanyActivityLog>,
+        private readonly memoryService: MemoryService,
   ) {}
 
   async create(dto: CreateCompanyDto) {
     const company = this.repo.create(dto);
     Object.assign(company, this.calculateScores(company));
-    return this.repo.save(company);
+    const savedCompany = await this.repo.save(company);
+
+    // Sauvegarder dans la mémoire
+    this.memoryService.saveCompanyProfile(savedCompany);
+
+    return savedCompany;
   }
 
   async findAll() {
@@ -33,15 +40,15 @@ export class CompanyService {
 
   async update(id: string, dto: UpdateCompanyDto, currentUserId: string) {
     const company = await this.findOne(id);
-  
+    
     // Garder un snapshot de l'état avant modification
     const beforeUpdate = { ...company };
-  
+
     Object.assign(company, dto);
     Object.assign(company, this.calculateScores(company));
-  
+
     const updatedCompany = await this.repo.save(company);
-  
+
     // Enregistrer dans activity log
     await this.activityRepo.save({
       companyId: company.id,
@@ -51,7 +58,10 @@ export class CompanyService {
       },
       updatedBy: currentUserId,
     });
-  
+
+    // Mettre à jour la mémoire
+    this.memoryService.saveCompanyProfile(updatedCompany);
+
     return updatedCompany;
   }
 
