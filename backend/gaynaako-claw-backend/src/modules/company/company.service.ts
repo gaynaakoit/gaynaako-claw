@@ -37,8 +37,6 @@ export class CompanyService {
   }
 
   private calculateScores(company: Company) {
-    let completeness = 0;
-
     const sections = [
       company.generalInfo,
       company.sectorInfo,
@@ -48,30 +46,23 @@ export class CompanyService {
       company.technicalInfo,
       company.esgInfo,
     ];
-
-    sections.forEach(s => {
-      if (s && Object.keys(s).length > 0) completeness += 15;
-    });
-
-    const credibility =
-      (company.experienceInfo?.yearsOfExperience || 0) +
+  
+    const weights = [15, 15, 20, 15, 10, 15, 10]; // Pondération stratégique
+    let profileCompletenessScore = 0;
+    sections.forEach((s, idx) => { if (s && Object.keys(s).length) profileCompletenessScore += weights[idx]; });
+  
+    const credibilityScore =
+      (company.experienceInfo?.yearsOfExperience || 0) * 2 +
       (company.certificationInfo?.certifications?.length || 0) * 5 +
-      ((company.technicalInfo?.aiReadinessScore || 0) > 0 ? 10 : 0);
-
-    const eligibility =
+      (company.technicalInfo?.aiReadinessScore || 0) > 0 ? 10 : 0;
+  
+    const tenderEligibilityScore =
       (company.financialInfo?.maxProjectBudget || 0) > 50000 ? 30 : 10;
-
-    const risk = company.financialInfo?.financialRating === 'AAA' ? 5 : 20;
-
-    const aiCompatibility = company.technicalInfo?.aiReadinessScore || 0;
-
-    return {
-      profileCompletenessScore: completeness,
-      credibilityScore: credibility,
-      tenderEligibilityScore: eligibility,
-      riskScore: risk,
-      aiCompatibilityScore: aiCompatibility,
-    };
+  
+    const riskScore = company.financialInfo?.financialRating === 'AAA' ? 5 : 20;
+    const aiCompatibilityScore = company.technicalInfo?.aiReadinessScore || 0;
+  
+    return { profileCompletenessScore, credibilityScore, tenderEligibilityScore, riskScore, aiCompatibilityScore };
   }
 
   async filterCompanies(filter: {
