@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { GeneralInfoDto } from '../dto/general-info.dto';
 import { SectorInfoDto } from '../dto/sector-info.dto';
 import { FinancialInfoDto } from '../dto/financial-info.dto';
@@ -6,6 +6,7 @@ import { ExperienceInfoDto } from '../dto/experience-info.dto';
 import { CertificationInfoDto } from '../dto/certification-info.dto';
 import { TechnicalInfoDto } from '../dto/technical-info.dto';
 import { EsgInfoDto } from '../dto/esg-info.dto';
+import { TenderMatch } from '../../tender-scout/entities/tender-match.entity';
 
 @Entity('companies')
 export class Company {
@@ -54,4 +55,12 @@ export class Company {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+
+  // =====================================
+  // RELATION TENDERMATCH
+  // =====================================
+
+  @OneToMany(() => TenderMatch, (match) => match.company)
+  matches: TenderMatch[];
 }
