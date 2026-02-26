@@ -48,11 +48,11 @@ export class Tender {
 
   @Index()
   @Column({ type: 'timestamp', nullable: true })
-  publicationDate: Date;
+  publicationDate: Date | null;;
 
   @Index()
   @Column({ type: 'timestamp' })
-  deadline: Date;
+  deadline: Date | null;;
 
   @Column({ type: 'timestamp', nullable: true })
   openingDate: Date;

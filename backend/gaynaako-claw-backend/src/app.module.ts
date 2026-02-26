@@ -13,7 +13,6 @@ import { TenderScoutModule } from './modules/tender-scout/tender-scout.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
