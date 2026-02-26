@@ -5,6 +5,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { CompanyModule } from './modules/company/company.module';
+import { TenderScoutModule } from './modules/tender-scout/tender-scout.module';
 
 
 @Module({
@@ -20,6 +21,7 @@ import { CompanyModule } from './modules/company/company.module';
       synchronize: true,
     }),
     CompanyModule,
+    TenderScoutModule,
   ],
   controllers: [AppController],
   providers: [AppService],
