@@ -3,11 +3,16 @@ import { TenderHashService } from './services/tender-hash.service.ts/tender-hash
 import { TenderNormalizerService } from './services/tender-normalizer.service.ts/tender-normalizer.service';
 import { Repository } from 'typeorm';
 import { Tender } from './entities/tender.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TenderScoutService {
-    constructor(private readonly tenderRepository: Repository<Tender>,
-        private readonly hashService: TenderHashService, private normalizer: TenderNormalizerService) {}
+    constructor(
+        @InjectRepository(Tender)
+        private readonly tenderRepository: Repository<Tender>,
+        private readonly hashService: TenderHashService,
+        private normalizer: TenderNormalizerService
+    ) {}
 
     async processIncomingTenders(rawTenders: any[]) {
         for (const raw of rawTenders) {
@@ -17,7 +22,13 @@ export class TenderScoutService {
           normalized.hash = hash;
           normalized.isFromOpenClaw = true;
       
-          await this.tenderRepository.save(normalized);
+          const existing = await this.tenderRepository.findOne({
+            where: { hash },
+          });
+          
+          if (!existing) {
+            await this.tenderRepository.save(normalized);
+          }
         }
       }
 }

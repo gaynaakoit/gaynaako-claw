@@ -27,6 +27,9 @@ export class OpenClawAgentService {
         const response$ = this.http.post(
           'http://localhost:8080/run',
           mission,
+          {
+            timeout: 120000, // 120 secondes
+          },
         );
 
         const response = await lastValueFrom(response$);
