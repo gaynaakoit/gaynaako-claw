@@ -9,9 +9,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tender } from './entities/tender.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SchedulerService } from 'src/scheduler/scheduler.service';
+import { TenderMatch } from './entities/tender-match.entity';
 
 @Module({
-  imports: [HttpModule, TypeOrmModule.forFeature([Tender]), ScheduleModule.forRoot()],
+  imports: [HttpModule, TypeOrmModule.forFeature([Tender, TenderMatch]), ScheduleModule.forRoot()],
   providers: [TenderScoutService, OpenClawAgentService, TenderNormalizerService, TenderHashService, SchedulerService],
   controllers: [TenderScoutController]
 })

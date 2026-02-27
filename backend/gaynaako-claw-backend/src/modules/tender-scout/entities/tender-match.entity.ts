@@ -22,7 +22,6 @@ import {
   
   @Entity('tender_matches')
   @Index(['company', 'tender'], { unique: true })
-  @Index(['score'])
   export class TenderMatch {
     @PrimaryGeneratedColumn('uuid')
     id: string;
