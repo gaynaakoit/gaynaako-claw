@@ -26,6 +26,8 @@ export class TenderScoutController {
   // 🔹 Route pour recevoir les tenders envoyés par OpenClaw
   @Post('receive')
   async processIncomingData(tenders: any[]) {
+    console.log('🔥 BODY RECEIVED:', JSON.stringify(tenders, null, 2));
+
     if (!tenders || !Array.isArray(tenders) || tenders.length === 0) {
       this.logger.warn('No tenders received from OpenClaw');
       return;
